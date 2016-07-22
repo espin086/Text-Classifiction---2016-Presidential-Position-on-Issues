@@ -9,7 +9,7 @@ setwd("/Users/jjespinoza/Documents/Text Classifiction - 2016 Presidential Positi
 
 df <- read.csv("TDM.csv")
 
-inBuild <- createDataPartition(y = df$target,p=0.6, list=FALSE)
+inBuild <- createDataPartition(y = df$target,p=0.7, list=FALSE)
 test <- df[-inBuild,]
 train <- df[inBuild,]
 
@@ -21,7 +21,7 @@ train <- df[inBuild,]
 
 fitControl <- trainControl(## 10-fold CV
         method = "repeatedcv",
-        number = 10,
+        number = 5,
         ## repeated ten times
         repeats = 10)
 
@@ -104,15 +104,29 @@ final.ensemble
 
 #######################################
 
+#Accessing Model Accuracy
+test$model.1 <- predict(model.1, test)
+test$model.2 <- predict(model.2, test)
+test$model.3 <- predict(model.3, test)
+test$model.4 <- predict(model.4, test)
+test$ensemble.1 <- predict(ensemble.1, test)
+test$ensemble.2 <- predict(ensemble.2, test)
+test$ensemble.3 <- predict(ensemble.3, test)
+test$ensemble.4 <- predict(ensemble.4, test)
+test$final.ensemble <- predict(final.ensemble, test)
+
+
+
+
 #Out of Sample Error: 1) Predict on test set and examine confusion matrix
-confusionMatrix(test$target, test$model.1)
-confusionMatrix(test$target, test$model.2)
-confusionMatrix(test$target, test$model.3)
-confusionMatrix(test$target, test$model.4)
+confusionMatrix(test$model.1,test$target)
+confusionMatrix(test$model.2,test$target)
+confusionMatrix(test$model.3,test$target)
+confusionMatrix(test$model.4,test$target)
 
-confusionMatrix(test$target, test$ensemble.1)
-confusionMatrix(test$target, test$ensemble.2)
-confusionMatrix(test$target, test$ensemble.3)
-confusionMatrix(test$target, test$ensemble.4)
+confusionMatrix(test$ensemble.1,test$target)
+confusionMatrix(test$ensemble.2,test$target)
+confusionMatrix(test$ensemble.3,test$target)
+confusionMatrix(test$ensemble.4,test$target)
 
-confusionMatrix(test$target, test$final.ensemble)
+confusionMatrix(test$final.ensemble,test$target)

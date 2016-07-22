@@ -1,4 +1,6 @@
 #WARNING: Convert all data into text and ensure ANSI encoding can use this site to convert:  http://utils.paranoiaworks.org/diacriticsremover/
+#PDF to text site
+#http://pdftotext.com/
 
 
 #init
@@ -33,7 +35,7 @@ generateTDM <- function(cand, path){
         s.cor <- VCorpus(DirSource(directory = s.dir), readerControl = list(reader=readPlain))
         s.cor.cl <- cleanCorpus(s.cor)
         s.tdm <- TermDocumentMatrix(s.cor.cl)
-        s.tdm <- removeSparseTerms(s.tdm, 0.7)
+        s.tdm <- removeSparseTerms(s.tdm, 0.40)
         result <- list(name = cand, tdm = s.tdm)
 }
 
@@ -54,6 +56,16 @@ tdm.stack[is.na(tdm.stack)] <- 0
 
 #Renaming target variable 
 colnames(tdm.stack)[1] <- "target"
+
+#Removing fields with near-zero-variance
+#Removing Near Zero Variance variables.
+nzv <- nearZeroVar(tdm.stack, saveMetrics= TRUE)
+nzv<-nzv[nzv$nzv=="TRUE",]
+nzv<-row.names(nzv)
+myvars <- names(tdm.stack) %in% nzv
+tdm.stack <- tdm.stack[!myvars]
+
+
 
 #Exporting Clean Dataset
 setwd(pathname)
