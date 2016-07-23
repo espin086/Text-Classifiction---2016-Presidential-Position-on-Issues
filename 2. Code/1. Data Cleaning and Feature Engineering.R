@@ -50,6 +50,8 @@ bindCandidateToTDM <- function(tdm){
 }
 
 candTDM <- lapply(tdm, bindCandidateToTDM)
+
+
 #stack
 tdm.stack <- do.call(rbind.fill, candTDM)
 tdm.stack[is.na(tdm.stack)] <- 0
